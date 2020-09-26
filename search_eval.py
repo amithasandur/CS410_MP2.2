@@ -20,7 +20,13 @@ class InL2Ranker(metapy.index.RankingFunction):
         For fields available in the score_data sd object,
         @see https://meta-toolkit.org/doxygen/structmeta_1_1index_1_1score__data.html
         """
-        return (self.param + sd.doc_term_count) / (self.param * sd.doc_unique_terms + sd.doc_size)
+        #return (self.param + sd.doc_term_count) / (self.param * sd.doc_unique_terms + sd.doc_size)
+        y=1+(sd.avg_dl/sd.doc_size)
+        tfn=sd.doc_term_count * log (y,2)
+        x=(sd.num_docs+1)/(sd.corpus_term_count+0.5)
+        c=1
+        lnL2=sd.query_term_weight * (tfn/(tfn+c)) * log(x,2)
+        return lnL2
 
 
 def load_ranker(cfg_file):
